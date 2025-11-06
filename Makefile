@@ -4,19 +4,15 @@ LD_FLAGS = -static -static-libgcc -static-libstdc++
 LEX = flex
 YACC = bison
 
-.PHONY: deleteme_runner
-deleteme_runner: deleteme
-	./$<
-
-deleteme: parser.tab.cpp parser.tab.hpp scanner.yy.cpp
-	$(CC) scanner.yy.cpp parser.tab.cpp -o $@
-
 .PHONY: run
 run: a.out
 	./$<
 
-a.out: main.o
-	$(CXX) $(LD_FLAGS) $< $(LD_LIBS) -o $@
+a.out: parser.tab.cpp parser.tab.hpp scanner.yy.cpp
+	$(CXX) -static scanner.yy.cpp parser.tab.cpp -o $@
+
+#a.out: main.o
+#	$(CXX) $(LD_FLAGS) $< $(LD_LIBS) -o $@
 
 main.o: main.cpp
 	$(CXX) $(CXX_FLAGS) -c $< -o $@

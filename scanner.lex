@@ -10,7 +10,7 @@
 
 %%
 
-0x[0-9a-f]+ {
+0x[0-9a-fA-F]+ {
   yylval.i = strtol(yytext, 0x0, 0);
   return NUM;
 }

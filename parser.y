@@ -3,6 +3,14 @@
 
 extern int yylex(void);
 int yyerror(char *msg);
+
+void print(long int i) {
+  if (i >= 32 && i <= 126) {
+    printf("%ld\t0x%lX\t0b%lb\t'%c'\n", i, i, i, (char)i);
+  } else {
+    printf("%ld\t0x%lX\t0b%lb\n", i, i, i);
+  }
+}
 %}
 
 %union {
@@ -23,15 +31,11 @@ int yyerror(char *msg);
 
 %%
 
-program : stmts END {printf("program\n");}
+program : stmts END {}
         ;
 
-stmts : stmts expr NEWLINE {
-  printf("%ld\t0x%lX\t0b%lb\n", $2, $2, $2);
-      }
-      | expr NEWLINE {
-  printf("%ld\t0x%lX\t0b%lb\n", $1, $1, $1);
-}
+stmts : stmts expr NEWLINE { print($2); }
+      | expr NEWLINE { print($1); }
 
 expr :
      primary PLUS primary { $$ = $1 + $3; }
@@ -54,10 +58,4 @@ int yyerror(char *msg) {
 
 int main() {
   yyparse();
-  printf("End.\n");
-}
-
-int yywrap() {
-  printf("YYWRAP\n");
-  return 1;
 }
