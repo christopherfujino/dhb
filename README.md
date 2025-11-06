@@ -1,4 +1,4 @@
-# Dec Hex Binary
+# Dec Hex Bin
 
 ```
 > 128

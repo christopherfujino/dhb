@@ -36,6 +36,7 @@ int main() {
   int v;
 
   if (isatty(STDIN_FILENO)) {
+    printf("Dec Hex Bin\n");
     while (1) {
       line = readline("> ");
 
