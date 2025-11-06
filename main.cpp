@@ -7,7 +7,7 @@
 
 const size_t MAX_LENGTH = 128;
 
-int parse(char *string) {
+long int parse(char *string) {
   const size_t len = strlen(string);
   if (len == 0) {
     fprintf(stderr, "Invalid input\n");
@@ -29,11 +29,11 @@ int parse(char *string) {
   return -1;
 }
 
-void print(int i) { printf("%d\t0x%X\t0b%b\n", i, i, i); }
+void print(long int i) { printf("%ld\t0x%lX\t0b%lb\n", i, i, i); }
 
 int main() {
   char *line = nullptr;
-  int v;
+  long int v;
 
   if (isatty(STDIN_FILENO)) {
     printf("Dec Hex Bin\n");
