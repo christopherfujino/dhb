@@ -5,12 +5,6 @@
 #include <stdio.h>
 #include <unistd.h>
 
-enum class Type {
-  dec,
-  hex,
-  asc,
-};
-
 const size_t MAX_LENGTH = 128;
 
 int parse(char *string) {
