@@ -13,7 +13,7 @@ int yyerror(char *msg);
 %token <i> NUM;
 %token NEWLINE;
 %token END;
-%token PLUS;
+%token PLUS MINUS;
 %token LEFT_SHIFT RIGHT_SHIFT;
 %token LPAREN RPAREN;
 %type <i> expr;
@@ -35,6 +35,7 @@ stmts : stmts expr NEWLINE {
 
 expr :
      primary PLUS primary { $$ = $1 + $3; }
+     | primary MINUS primary { $$ = $1 - $3; }
      | primary LEFT_SHIFT primary { $$ = $1 << $3; }
      | primary RIGHT_SHIFT primary { $$ = $1 >> $3; }
      | primary { $$ = $1; }

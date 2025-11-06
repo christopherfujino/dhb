@@ -20,12 +20,18 @@
   return NUM;
 }
 
+0 {
+  yylval.i = 0;
+  return NUM;
+}
+
 [1-9][0-9]* {
   yylval.i = strtol(yytext, 0x0, 10);
   return NUM;
 }
 
 "+" { return PLUS; }
+"-" { return MINUS; }
 "<<" { return LEFT_SHIFT; }
 ">>" { return RIGHT_SHIFT; }
 
