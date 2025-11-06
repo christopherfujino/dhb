@@ -11,7 +11,10 @@ int yyerror(char *msg);
 }
 
 %token <i> NUM;
+%token NEWLINE;
+%token END;
 %token PLUS;
+%token LPAREN RPAREN;
 %type <i> expr;
 %type <i> primary;
 
@@ -19,10 +22,15 @@ int yyerror(char *msg);
 
 %%
 
-program : expr {
-  printf("%ld\t0x%lX\t0b%lb\n", $1, $1, $1);
-}
+program : stmts END {printf("program\n");}
         ;
+
+stmts : stmts expr NEWLINE {
+  printf("%ld\t0x%lX\t0b%lb FIRST\n", $2, $2, $2);
+      }
+      | expr NEWLINE {
+  printf("%ld\t0x%lX\t0b%lb SECOND\n", $1, $1, $1);
+}
 
 expr :
      primary PLUS primary { $$ = $1 + $3; }
@@ -30,6 +38,7 @@ expr :
      ;
 
 primary : NUM { $$ = $1; }
+        | LPAREN expr RPAREN { $$ = $2; }
         ;
 
 %%

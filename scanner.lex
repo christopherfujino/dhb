@@ -25,10 +25,16 @@
   return NUM;
 }
 
-"+" {
-  return PLUS;
-}
+"+" { return PLUS; }
 
-[ \t\r\n]  ;
+"(" { return LPAREN; }
+
+")" { return RPAREN; }
+
+"\n" { return NEWLINE; }
+
+<<EOF>> { return END; }
+
+[ \t\r]  ;
 
 %%
