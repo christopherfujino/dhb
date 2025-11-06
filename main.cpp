@@ -1,8 +1,9 @@
 #include <cstdlib>
 #include <cstring>
+#include <readline/history.h>
 #include <readline/readline.h>
 #include <stdio.h>
-#include <readline/history.h>
+#include <unistd.h>
 
 enum class Type {
   dec,
@@ -34,29 +35,44 @@ int parse(char *string) {
   return -1;
 }
 
-void print(int i) {
-  printf("%d\t0x%X\t0b%b\n", i, i, i);
-}
+void print(int i) { printf("%d\t0x%X\t0b%b\n", i, i, i); }
 
 int main() {
   char *line = nullptr;
   int v;
 
-  while (1) {
-    line = readline("> ");
+  if (isatty(STDIN_FILENO)) {
+    while (1) {
+      line = readline("> ");
 
-    if (line == nullptr) {
-      break;
+      if (line == nullptr) {
+        break;
+      }
+
+      v = parse(line);
+      add_history(line);
+      free(line);
+
+      if (v == -1) {
+        continue;
+      }
+
+      print(v);
     }
-
-    v = parse(line);
-    add_history(line);
-
-    if (v == -1) {
-      continue;
+  } else {
+    char buffer[MAX_LENGTH] = "";
+    char *cptr = nullptr;
+    while (1) {
+      cptr = fgets(buffer, MAX_LENGTH, stdin);
+      if (!cptr) {
+        break;
+      }
+      v = parse(buffer);
+      if (v == -1) {
+        break;
+      }
+      print(v);
     }
-
-    print(v);
   }
   return 0;
 }
