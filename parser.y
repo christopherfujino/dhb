@@ -6,9 +6,9 @@ int yyerror(char *msg);
 
 void print(long int i) {
   if (i >= 32 && i <= 126) {
-    printf("%ld\t0x%lX\t0b%lb\t'%c'\n", i, i, i, (char)i);
+    printf("%ld\t0x%lX\t0b%lb\t'%c'\n> ", i, i, i, (char)i);
   } else {
-    printf("%ld\t0x%lX\t0b%lb\n", i, i, i);
+    printf("%ld\t0x%lX\t0b%lb\n> ", i, i, i);
   }
 }
 %}
@@ -57,5 +57,6 @@ int yyerror(char *msg) {
 }
 
 int main() {
+  printf("> ");
   yyparse();
 }
