@@ -400,3 +400,7 @@ FodyWeavers.xsd
 # Custom
 a.out
 *.o
+
+*.yy.cpp
+*.tab.cpp
+*.tab.hpp

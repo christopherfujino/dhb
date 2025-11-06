@@ -1,6 +1,15 @@
 CXX_FLAGS = -g
 LD_LIBS = -lreadline -ltinfo
 LD_FLAGS = -static -static-libgcc -static-libstdc++
+LEX = flex
+YACC = bison
+
+.PHONY: deleteme_runner
+deleteme_runner: deleteme
+	./$<
+
+deleteme: parser.tab.cpp parser.tab.hpp scanner.yy.cpp
+	$(CC) scanner.yy.cpp parser.tab.cpp -o $@
 
 .PHONY: run
 run: a.out
@@ -12,6 +21,13 @@ a.out: main.o
 main.o: main.cpp
 	$(CXX) $(CXX_FLAGS) -c $< -o $@
 
+scanner.yy.cpp: scanner.lex
+	$(LEX) -o $@ $<
+
+# -d means generate header file
+parser.tab.cpp: parser.y
+	$(YACC) -d $< -o $@
+
 .PHONY: clean
 clean:
-	rm -f a.out *.o
+	rm -f a.out *.o *.tab.cpp *.tab.hpp
