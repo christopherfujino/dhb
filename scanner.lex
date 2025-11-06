@@ -26,6 +26,8 @@
 }
 
 "+" { return PLUS; }
+"<<" { return LEFT_SHIFT; }
+">>" { return RIGHT_SHIFT; }
 
 "(" { return LPAREN; }
 
