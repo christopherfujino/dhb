@@ -17,8 +17,7 @@ long int parse(char *string) {
     // TODO validate it's all hex
     return strtol(string, nullptr, 0);
   } else if (string[0] == '0' && string[1] == 'b') {
-    char sub[MAX_LENGTH - 2];
-    strncpy(sub, string, MAX_LENGTH - 2);
+    // This seems to magically work, although manpage says otherwise
     return strtol(string, nullptr, 2);
   } else if (string[0] >= '0' && string[0] <= '9') {
     return atoi(string);
