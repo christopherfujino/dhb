@@ -12,6 +12,8 @@ void print(long int i) {
     printf("%ld\t0x%lX\t0b%lb\n> ", i, i, i);
   }
 }
+
+long int prev = 0;
 %}
 
 %union {
@@ -25,6 +27,7 @@ void print(long int i) {
 %token PLUS MINUS LEFT_SHIFT RIGHT_SHIFT MULT DIVIDE;
 %token POWER;
 %token LPAREN RPAREN;
+%token DOLLAR;
 %type <i> expr;
 %type <i> primary;
 
@@ -40,8 +43,8 @@ void print(long int i) {
 program : stmts END {}
         ;
 
-stmts : stmts expr NEWLINE { print($2); }
-      | expr NEWLINE { print($1); }
+stmts : stmts expr NEWLINE { prev = $2; print(prev); }
+      | expr NEWLINE { prev = $1; print(prev); }
 
 expr :
      expr PLUS expr { $$ = $1 + $3; }
@@ -55,6 +58,7 @@ expr :
      ;
 
 primary : NUM { $$ = $1; }
+        | DOLLAR { $$ = prev; }
         | LPAREN expr RPAREN { $$ = $2; }
         ;
 

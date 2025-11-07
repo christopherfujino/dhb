@@ -30,6 +30,7 @@
   return NUM;
 }
 
+"$" { return DOLLAR; }
 "+" { return PLUS; }
 "-" { return MINUS; }
 "*" { return MULT; }
