@@ -1,4 +1,5 @@
 %{
+#include <math.h>
 #include <stdio.h>
 
 extern int yylex(void);
@@ -23,6 +24,7 @@ void print(long int i) {
 %token END;
 %token PLUS MINUS;
 %token LEFT_SHIFT RIGHT_SHIFT;
+%token POWER;
 %token LPAREN RPAREN;
 %type <i> expr;
 %type <i> primary;
@@ -42,6 +44,7 @@ expr :
      | primary MINUS primary { $$ = $1 - $3; }
      | primary LEFT_SHIFT primary { $$ = $1 << $3; }
      | primary RIGHT_SHIFT primary { $$ = $1 >> $3; }
+     | primary POWER primary { $$ = pow($1, $3); }
      | primary { $$ = $1; }
      ;
 
