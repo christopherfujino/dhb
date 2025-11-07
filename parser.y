@@ -22,8 +22,7 @@ void print(long int i) {
 %token <i> NUM;
 %token NEWLINE;
 %token END;
-%token PLUS MINUS;
-%token LEFT_SHIFT RIGHT_SHIFT;
+%token PLUS MINUS LEFT_SHIFT RIGHT_SHIFT MULT DIVIDE;
 %token POWER;
 %token LPAREN RPAREN;
 %type <i> expr;
@@ -31,6 +30,7 @@ void print(long int i) {
 
 %left LEFT_SHIFT RIGHT_SHIFT;
 %left PLUS MINUS;
+%left MULT DIVIDE;
 %left POWER;
 
 %start program
@@ -46,6 +46,8 @@ stmts : stmts expr NEWLINE { print($2); }
 expr :
      expr PLUS expr { $$ = $1 + $3; }
      | expr MINUS expr { $$ = $1 - $3; }
+     | expr MULT expr { $$ = $1 * $3; }
+     | expr DIVIDE expr { /* TODO: error handling */ $$ = $1 / $3; }
      | expr LEFT_SHIFT expr { $$ = $1 << $3; }
      | expr RIGHT_SHIFT expr { $$ = $1 >> $3; }
      | expr POWER expr { $$ = pow($1, $3); }

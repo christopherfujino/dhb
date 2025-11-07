@@ -32,6 +32,8 @@
 
 "+" { return PLUS; }
 "-" { return MINUS; }
+"*" { return MULT; }
+"/" { return DIVIDE; }
 "^" { return POWER; }
 "<<" { return LEFT_SHIFT; }
 ">>" { return RIGHT_SHIFT; }
