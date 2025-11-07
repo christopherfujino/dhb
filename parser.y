@@ -29,6 +29,10 @@ void print(long int i) {
 %type <i> expr;
 %type <i> primary;
 
+%left LEFT_SHIFT RIGHT_SHIFT;
+%left PLUS MINUS;
+%left POWER;
+
 %start program
 
 %%
@@ -40,11 +44,11 @@ stmts : stmts expr NEWLINE { print($2); }
       | expr NEWLINE { print($1); }
 
 expr :
-     primary PLUS primary { $$ = $1 + $3; }
-     | primary MINUS primary { $$ = $1 - $3; }
-     | primary LEFT_SHIFT primary { $$ = $1 << $3; }
-     | primary RIGHT_SHIFT primary { $$ = $1 >> $3; }
-     | primary POWER primary { $$ = pow($1, $3); }
+     expr PLUS expr { $$ = $1 + $3; }
+     | expr MINUS expr { $$ = $1 - $3; }
+     | expr LEFT_SHIFT expr { $$ = $1 << $3; }
+     | expr RIGHT_SHIFT expr { $$ = $1 >> $3; }
+     | expr POWER expr { $$ = pow($1, $3); }
      | primary { $$ = $1; }
      ;
 
