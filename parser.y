@@ -23,7 +23,6 @@ long int prev = 0;
 
 %token <i> NUM;
 %token NEWLINE;
-%token END;
 %token PLUS MINUS LEFT_SHIFT RIGHT_SHIFT MULT DIVIDE;
 %token POWER;
 %token LPAREN RPAREN;
@@ -40,7 +39,7 @@ long int prev = 0;
 
 %%
 
-program : stmts END {}
+program : stmts {}
         ;
 
 stmts : stmts expr NEWLINE { prev = $2; print(prev); }
@@ -72,4 +71,5 @@ int yyerror(char *msg) {
 int main() {
   printf("> ");
   yyparse();
+  putchar('\n');
 }

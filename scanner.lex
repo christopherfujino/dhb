@@ -45,8 +45,6 @@
 
 "\n" { return NEWLINE; }
 
-<<EOF>> { return END; }
-
 [ \t\r]  ;
 
 %%
