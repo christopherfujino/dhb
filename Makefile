@@ -9,7 +9,8 @@ run: a.out
 	./$<
 
 a.out: parser.tab.cpp parser.tab.hpp scanner.yy.cpp
-	$(CXX) -static scanner.yy.cpp parser.tab.cpp -o $@
+	$(CXX) scanner.yy.cpp parser.tab.cpp -lreadline -o $@
+	#$(CXX) $(LD_LIBS) -static scanner.yy.cpp parser.tab.cpp -o $@
 
 #a.out: main.o
 #	$(CXX) $(LD_FLAGS) $< $(LD_LIBS) -o $@

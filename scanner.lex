@@ -2,11 +2,31 @@
 %{
   #include "parser.tab.hpp"
 
+  #include <readline/history.h>
+  #include <readline/readline.h>
+
   const size_t MAX_LENGTH = 128;
   char buffer[MAX_LENGTH];
+
+  #define YY_INPUT(buf, result, max_size) {\
+    char *line = readline("> ");\
+    if (line != NULL) {\
+      size_t len = strlen(line);\
+      if ((len) >= max_size) {\
+        fprintf(stderr, "TODO: implement length checking!\n");\
+        exit(42);\
+      }\
+      strcpy(buf, line);\
+      printf("scanned %ld bytes\n", len);\
+      result = len;\
+    } else {\
+      result = YY_NULL;\
+    }\
+    free(line);\
+  }
 %}
 
-%option noyywrap
+%option C++ noyywrap
 
 %%
 
@@ -26,6 +46,7 @@
 }
 
 [1-9][0-9]* {
+  printf("Scanned decimal %s\n", yytext);
   yylval.i = strtol(yytext, 0x0, 10);
   return NUM;
 }
