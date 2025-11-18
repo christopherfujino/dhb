@@ -8,3 +8,7 @@
 > (1 << 8) - 1
 255     0xFF    0b11111111
 ```
+
+## Building
+
+Requires readline, flex, and bison.
