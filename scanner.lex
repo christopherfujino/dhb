@@ -1,29 +1,24 @@
 /* Header code */
 %{
-  #include "parser.tab.hpp"
+  #include "parser.tab.h"
 
   #include <readline/history.h>
   #include <readline/readline.h>
 
-  const size_t MAX_LENGTH = 128;
-  char buffer[MAX_LENGTH];
+  #define YY_INPUT(buf, result, max_size) result = mygetinput(buf, max_size);
 
-  #define YY_INPUT(buf, result, max_size) {\
-    char *line = readline("> ");\
-    if (line != NULL) {\
-      size_t len = strlen(line);\
-      if ((len) >= max_size) {\
-        fprintf(stderr, "TODO: implement length checking!\n");\
-        exit(42);\
-      }\
-      strcpy(buf, line);\
-      printf("scanned %ld bytes\n", len);\
-      result = len;\
-    } else {\
-      result = YY_NULL;\
-    }\
-    free(line);\
+  static int mygetinput(char *buf, int size) {
+    char *line;
+    if (feof(yyin))  return YY_NULL;
+    line = readline("> ");
+    if(!line)        return YY_NULL;
+    if(strlen(line) > size-2){
+       fprintf(stderr,"input line too long\n"); return YY_NULL; }
+    sprintf(buf,"%s\n",line);
+    free(line);
+    return strlen(buf);
   }
+
 %}
 
 %option noyywrap
@@ -46,13 +41,13 @@
 }
 
 [1-9][0-9]* {
-  printf("Scanned decimal %s\n", yytext);
   yylval.i = strtol(yytext, 0x0, 10);
+  printf("Scanned decimal %ld\n", yylval.i);
   return NUM;
 }
 
 "$" { return DOLLAR; }
-"+" { return PLUS; }
+"+" { printf("Scanned +\n"); return PLUS; }
 "-" { return MINUS; }
 "*" { return MULT; }
 "/" { return DIVIDE; }

@@ -401,6 +401,6 @@ FodyWeavers.xsd
 a.out
 *.o
 
-*.yy.cpp
-*.tab.cpp
-*.tab.hpp
+*.yy.c
+*.tab.c
+*.tab.h
