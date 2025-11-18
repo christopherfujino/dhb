@@ -72,5 +72,4 @@ int yyerror(char *msg) {
 
 int main() {
   yyparse();
-  putchar('\n');
 }

@@ -1,5 +1,6 @@
 /* Header code */
 %{
+  #include <unistd.h> // isatty()
   #include "parser.tab.h"
 
   // include-ing readline.h breaks the parser?!
@@ -9,26 +10,42 @@
   #define YY_INPUT(buf, result, max_size) result = readInput(buf, max_size);
 
   static int readInput(char *buf, int size) {
-    char *line;
-    if (feof(yyin)) {
-      return YY_NULL;
+    if (isatty(STDIN_FILENO)) {
+      char *line;
+      if (feof(yyin)) {
+        return YY_NULL;
+      }
+      line = readline("> ");
+      if (line == 0) {
+        return YY_NULL;
+      }
+      size_t len = strlen(line);
+      // -2 for newline and NULL
+      if (len > (size - 2)) {
+        fprintf(stderr,"input line too long\n");
+        return YYerror;
+      }
+      memcpy(buf, line, len);
+      buf[len] = '\n';
+      buf[len + 1] = 0x0;
+      add_history(line);
+      free(line);
+      return strlen(buf);
+    } else {
+      // this will include trailing newline
+      char *maybeNull = fgets(buf, size - 1, stdin);
+      if (maybeNull == 0) {
+        return YY_NULL;
+      }
+      size_t len = strlen(buf);
+      // -2 for newline and NULL
+      // >= because fgets would truncate too long input
+      if (len >= (size - 2)) {
+        fprintf(stderr,"input line too long\n");
+        return YYerror;
+      }
+      return len;
     }
-    line = readline("> ");
-    if (line == 0) {
-      return YY_NULL;
-    }
-    size_t len = strlen(line);
-    // -2 for newline and NULL
-    if (len > (size - 2)) {
-      fprintf(stderr,"input line too long\n");
-      return YYerror;
-    }
-    memcpy(buf, line, len);
-    buf[len] = '\n';
-    buf[len + 1] = 0x0;
-    add_history(line);
-    free(line);
-    return strlen(buf);
   }
 
 %}
