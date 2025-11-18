@@ -4,6 +4,7 @@
 
   // include-ing readline.h breaks the parser?!
   extern char *readline(const char *);
+  extern void add_history(const char *);
 
   #define YY_INPUT(buf, result, max_size) result = readInput(buf, max_size);
 
@@ -20,11 +21,12 @@
     // -2 for newline and NULL
     if (len > (size - 2)) {
       fprintf(stderr,"input line too long\n");
-      return YY_NULL;
+      return YYerror;
     }
     memcpy(buf, line, len);
     buf[len] = '\n';
     buf[len + 1] = 0x0;
+    add_history(line);
     free(line);
     return strlen(buf);
   }
