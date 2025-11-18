@@ -2,19 +2,29 @@
 %{
   #include "parser.tab.h"
 
-  #include <readline/history.h>
-  #include <readline/readline.h>
+  // include-ing readline.h breaks the parser?!
+  extern char *readline(const char *);
 
-  #define YY_INPUT(buf, result, max_size) result = mygetinput(buf, max_size);
+  #define YY_INPUT(buf, result, max_size) result = readInput(buf, max_size);
 
-  static int mygetinput(char *buf, int size) {
+  static int readInput(char *buf, int size) {
     char *line;
-    if (feof(yyin))  return YY_NULL;
+    if (feof(yyin)) {
+      return YY_NULL;
+    }
     line = readline("> ");
-    if(!line)        return YY_NULL;
-    if(strlen(line) > size-2){
-       fprintf(stderr,"input line too long\n"); return YY_NULL; }
-    sprintf(buf,"%s\n",line);
+    if (line == 0) {
+      return YY_NULL;
+    }
+    size_t len = strlen(line);
+    // -2 for newline and NULL
+    if (len > (size - 2)) {
+      fprintf(stderr,"input line too long\n");
+      return YY_NULL;
+    }
+    memcpy(buf, line, len);
+    buf[len] = '\n';
+    buf[len + 1] = 0x0;
     free(line);
     return strlen(buf);
   }
@@ -42,12 +52,11 @@
 
 [1-9][0-9]* {
   yylval.i = strtol(yytext, 0x0, 10);
-  printf("Scanned decimal %ld\n", yylval.i);
   return NUM;
 }
 
 "$" { return DOLLAR; }
-"+" { printf("Scanned +\n"); return PLUS; }
+"+" { return PLUS; }
 "-" { return MINUS; }
 "*" { return MULT; }
 "/" { return DIVIDE; }
