@@ -26,7 +26,7 @@
   }
 %}
 
-%option C++ noyywrap
+%option noyywrap
 
 %%
 
