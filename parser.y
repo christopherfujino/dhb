@@ -42,6 +42,7 @@ long int prev = 0;
 %%
 
 program : stmts {}
+        | %empty {}
         ;
 
 stmts : stmts expr NEWLINE { prev = $2; print(prev); }
