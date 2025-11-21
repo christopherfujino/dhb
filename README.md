@@ -16,7 +16,7 @@ A REPL for integer arithmetic, supporting decimal, hexadecimal, and binary.
 All values are represented internally as a `signed long int`.
 
 |Operator|Operation|
-|--|--|
+|--|--|--|
 |`+`|signed addition|
 |`-`|signed subtraction|
 |`*`|multiplication|
@@ -24,6 +24,7 @@ All values are represented internally as a `signed long int`.
 |`<<`|left shift|
 |`>>`|right shift|
 |`^`|exponentiate|
+|`(` ... `)`|grouping (enforce precedence)|
 
 ## Building
 

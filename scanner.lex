@@ -60,6 +60,7 @@
 }
 
 0[bB][01]+ {
+  // strtol doesn't understand "0b" prefixes
   yylval.i = strtol(yytext + 2, 0x0, 2);
   return NUM;
 }
