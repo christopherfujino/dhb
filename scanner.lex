@@ -59,8 +59,8 @@
   return NUM;
 }
 
-0b[01]+ {
-  yylval.i = strtol(yytext, 0x0, 2);
+0[bB][01]+ {
+  yylval.i = strtol(yytext + 2, 0x0, 2);
   return NUM;
 }
 
