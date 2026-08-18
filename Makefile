@@ -1,5 +1,5 @@
 CC = clang
-LD_LIBS = -lreadline -ltinfo -lm
+LDFLAGS = -lreadline -ltinfo -lm
 LEX = flex
 YACC = bison
 
@@ -8,7 +8,7 @@ run: a.out
 	./$<
 
 a.out: parser.tab.c parser.tab.h scanner.yy.c
-	$(CC) -g $(LD_LIBS) scanner.yy.c parser.tab.c -o $@
+	$(CC) -g $(LDFLAGS) scanner.yy.c parser.tab.c -o $@
 
 scanner.yy.c: scanner.lex
 	$(LEX) -o $@ $<
