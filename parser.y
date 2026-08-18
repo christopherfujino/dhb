@@ -1,21 +1,15 @@
 %{
 #include <math.h>
 #include <stdio.h>
-
-extern int yylex(void);
-int yyerror(char *msg);
-
-void print(long int i) {
-  if (i >= 32 && i <= 126) {
-    printf("%ld\t0x%lX\t0b%lb\t'%c'\n", i, i, i, (char)i);
-  } else {
-    printf("%ld\t0x%lX\t0b%lb\n", i, i, i);
-  }
-}
-
-long int prev = 0;
-
 #define YYDEBUG 1
+
+// From main.c
+extern int main(void);
+extern void print(long int i);
+extern int yylex(void);
+extern long int prev;
+
+int yyerror(char *msg);
 %}
 
 %union {
@@ -69,8 +63,4 @@ primary : NUM { $$ = $1; }
 int yyerror(char *msg) {
   fprintf(stderr, "yyerror: %s\n\n%c\n", msg, yychar);
   return 0;
-}
-
-int main() {
-  yyparse();
 }

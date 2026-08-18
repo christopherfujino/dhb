@@ -21,7 +21,7 @@
       }
       size_t len = strlen(line);
       // -2 for newline and NULL
-      if (len > (size - 2)) {
+      if ((signed int)len > (size - 2)) {
         fprintf(stderr,"input line too long\n");
         return YYerror;
       }
@@ -40,7 +40,7 @@
       size_t len = strlen(buf);
       // -2 for newline and NULL
       // >= because fgets would truncate too long input
-      if (len >= (size - 2)) {
+      if ((signed int)len >= (size - 2)) {
         fprintf(stderr,"input line too long\n");
         return YYerror;
       }

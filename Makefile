@@ -2,13 +2,14 @@ CC = clang
 LDFLAGS = -lreadline -ltinfo -lm
 LEX = flex
 YACC = bison
+CFLAGS = -g -O0 -Wall -Wextra -Wpedantic
 
 .PHONY: run
 run: a.out
 	./$<
 
-a.out: parser.tab.c parser.tab.h scanner.yy.c
-	$(CC) -g $(LDFLAGS) scanner.yy.c parser.tab.c -o $@
+a.out: parser.tab.o scanner.yy.o main.o
+	$(CC) $(LDFLAGS) $^ -o $@
 
 scanner.yy.c: scanner.lex
 	$(LEX) -o $@ $<
@@ -16,6 +17,9 @@ scanner.yy.c: scanner.lex
 # -d means generate header file
 parser.tab.c: parser.y
 	$(YACC) -d $< -o $@
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
 .PHONY: clean
 clean:
