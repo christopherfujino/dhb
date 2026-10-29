@@ -1,6 +1,8 @@
 /* Header code */
 %{
   #include <unistd.h> // isatty()
+  #include "main.h"
+  #include "value.h" // this must be before parser.tab.h
   #include "parser.tab.h"
 
   // include-ing readline.h breaks the parser?!
@@ -55,25 +57,72 @@
 %%
 
 0x[0-9a-fA-F]+ {
-  yylval.i = strtol(yytext, 0x0, 0);
-  return NUM;
+  do {
+    // will parse the leading 0x
+    constexpr int base = 0;
+    switch (mode) {
+    case modeInt:
+      yylval.v = valueOfInt(strtol(yytext, nullptr, base));
+      return NUM;
+    case modeFloat:
+      fprintf(
+        stderr,
+        "Can't directly parse hex -> double (try parsing as decimal)\n"
+      );
+      abort();
+    }
+  } while(0);
 }
 
 0[bB][01]+ {
-  // strtol doesn't understand "0b" prefixes
-  yylval.i = strtol(yytext + 2, 0x0, 2);
-  return NUM;
+  switch (mode) {
+  case modeInt:
+    // strtol doesn't understand "0b" prefixes
+    yylval.v = valueOfInt(strtol(yytext + 2, 0x0, 2));
+    return NUM;
+  case modeFloat:
+      fprintf(
+        stderr,
+        "Can't directly parse binary -> double (try parsing as decimal)\n"
+      );
+      abort();
+  }
 }
 
 0 {
-  yylval.i = 0;
-  return NUM;
+  switch (mode) {
+  case modeInt:
+    yylval.v = valueOfInt(0);
+    return NUM;
+  case modeFloat:
+    yylval.v = valueOfFloat(0.0);
+    return NUM;
+  }
 }
 
 [1-9][0-9]* {
-  yylval.i = strtol(yytext, 0x0, 10);
-  return NUM;
+  switch (mode) {
+  case modeInt:
+    yylval.v = valueOfInt(strtol(yytext, 0x0, 10));
+    return NUM;
+  case modeFloat:
+    yylval.v = valueOfFloat(strtold(yytext, nullptr));
+    return NUM;
+  }
 }
+
+[0-9]+\.[0-9]+? {
+  switch (mode) {
+  case modeInt:
+    fprintf(stderr, "Can't parse this in int mode\n");
+    abort();
+  case modeFloat:
+    yylval.v = valueOfFloat(strtold(yytext, nullptr));
+    return NUM;
+  }
+}
+
+
 
 "$" { return DOLLAR; }
 "+" { return PLUS; }

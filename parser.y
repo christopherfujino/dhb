@@ -1,30 +1,26 @@
 %{
-#include <math.h>
 #include <stdio.h>
-#define YYDEBUG 1
+#include "main.h"
+#include "value.h"
 
-// From main.c
-extern int main(void);
-extern void print(long int i);
-extern int yylex(void);
-extern long int prev;
+#define YYDEBUG 1
 
 int yyerror(char *msg);
 %}
 
 %union {
-  long int i;
+  Value v;
   int token;
 }
 
-%token <i> NUM;
+%token <v> NUM;
 %token NEWLINE;
 %token PLUS MINUS LEFT_SHIFT RIGHT_SHIFT MULT DIVIDE;
 %token POWER;
 %token LPAREN RPAREN;
 %token DOLLAR;
-%type <i> expr;
-%type <i> primary;
+%type <v> expr;
+%type <v> primary;
 
 %left LEFT_SHIFT RIGHT_SHIFT;
 %left PLUS MINUS;
@@ -41,15 +37,15 @@ program : stmts {}
 
 stmts : stmts expr NEWLINE { prev = $2; print(prev); }
       | expr NEWLINE { prev = $1; print(prev); }
+      ;
 
-expr :
-     expr PLUS expr { $$ = $1 + $3; }
-     | expr MINUS expr { $$ = $1 - $3; }
-     | expr MULT expr { $$ = $1 * $3; }
-     | expr DIVIDE expr { /* TODO: error handling */ $$ = $1 / $3; }
-     | expr LEFT_SHIFT expr { $$ = $1 << $3; }
-     | expr RIGHT_SHIFT expr { $$ = $1 >> $3; }
-     | expr POWER expr { $$ = pow($1, $3); }
+expr : expr PLUS expr { $$ = valueAdd($1, $3); }
+     | expr MINUS expr { $$ = valueSubtract($1, $3); }
+     | expr MULT expr { $$ = valueMultiply($1, $3); }
+     | expr DIVIDE expr { $$ = valueDivide($1, $3); }
+     | expr LEFT_SHIFT expr { $$ = valueLeftShift($1, $3); }
+     | expr RIGHT_SHIFT expr { $$ = valueRightShift($1, $3); }
+     | expr POWER expr { $$ = valuePower($1, $3); }
      | primary { $$ = $1; }
      ;
 

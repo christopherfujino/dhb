@@ -13,7 +13,7 @@ A REPL for integer arithmetic, supporting decimal, hexadecimal, and binary.
 
 ## Operators
 
-All values are represented internally as 64-bit unsigned integers.
+All values are represented internally as 64-bit signed integers.
 
 |Operator|Operation|
 |--|--|
