@@ -6,6 +6,7 @@
 #include <tgmath.h> // pow()
 
 static_assert(sizeof(long int) == 8, "longs must be 64-bit");
+static_assert(sizeof(double) == 8, "longs must be 64-bit");
 
 typedef struct {
   enum {
