@@ -2,6 +2,7 @@
 #define __MONOREPO_CPP_DHB_VALUE_H
 
 #include <stdint.h> // int64_t
+#include <stdio.h>  // printf()
 #include <stdlib.h> // abort()
 #include <tgmath.h> // pow()
 
@@ -80,23 +81,23 @@ static inline Value valueDivide(Value a, Value b) {
     }
     return valueOfInt(a.i / b.i);
   case valueFloat:
-    if (b.f == 0) {
-      abort();
-    }
+    // if (b.f == 0) {
+    //   abort();
+    // }
     return valueOfFloat(a.f / b.f);
   }
 }
 
 static inline Value valueLeftShift(Value a, Value b) {
-  if (!(a.tag == b.tag == valueInt)) {
-    // floats don't support bit shifting
+  // floats don't support bit shifting
+  if ((a.tag != valueInt) || (b.tag != valueInt)) {
     abort();
   }
   return valueOfInt(a.i << b.i);
 }
 
 static inline Value valueRightShift(Value a, Value b) {
-  if (!(a.tag == b.tag == valueInt)) {
+  if ((a.tag != valueInt) || (b.tag != valueInt)) {
     // floats don't support bit shifting
     abort();
   }
@@ -107,11 +108,11 @@ static inline Value valuePower(Value a, Value b) {
   if (a.tag != b.tag) {
     abort();
   }
-  switch(a.tag) {
-    case valueInt:
-      return valueOfInt(pow(a.i, b.i));
-    case valueFloat:
-      return valueOfFloat(pow(a.f, b.f));
+  switch (a.tag) {
+  case valueInt:
+    return valueOfInt(pow(a.i, b.i));
+  case valueFloat:
+    return valueOfFloat(pow(a.f, b.f));
   }
 }
 

@@ -404,4 +404,5 @@ a.out
 *.yy.c
 *.tab.c
 *.tab.h
+*.d
 compile_commands.json
