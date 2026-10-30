@@ -12,6 +12,20 @@ hexadecimal, and binary.
 255     0xFF    0b11111111
 ```
 
+When invoked as `dhb -f`:
+
+```
+> 0.1 + 0.2
+0 01111111101 0011001100110011001100110011001100110011001100110100
+│ ├─────────┘ ├──────────────────────────────────────────────────┘
+│ │           └ Mantissa = 900719925474100
+│ └──────────── Exponent = 1021
+└────────────── Sign     = 0
+
+-1^0 * 2^(1021 - 1023) * 1.2
+1 * 0.25 * 1.2 = 0.30000000000000004
+```
+
 ## Values
 
 By default, `dhb` uses 64-bit signed integers for all values. If you invoke
@@ -21,18 +35,16 @@ double-precision floats.
 
 ## Operators
 
-All values are represented internally as 64-bit signed integers.
-
-|Operator|Operation|
-|--|--|
-|`+`|signed addition|
-|`-`|signed subtraction|
-|`*`|multiplication|
-|`/`|division|
-|`<<`|left shift|
-|`>>`|right shift|
-|`^`|exponentiate|
-|`(` ... `)`|grouping (enforce precedence)|
+|Operator|Operation|Float support?|
+|--|--|--|
+|`+`|signed addition|Yes|
+|`-`|signed subtraction|Yes|
+|`*`|multiplication|Yes|
+|`/`|division|Yes|
+|`<<`|left shift|No|
+|`>>`|right shift|No|
+|`^`|exponentiate|Yes|
+|`(` ... `)`|grouping (enforce precedence)|Yes|
 
 ## Building
 

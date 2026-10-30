@@ -72,6 +72,7 @@ void print(Value v) {
     }
 
     double mantissaDecimal = 1.0;
+    // TODO: calculate this with ints, iterating over bits (and shifts?)
     {
       for (int i = 0; i < 52; i++) {
         int bit = ((mantissa >> (51 - i)) & 0x1);
@@ -80,17 +81,17 @@ void print(Value v) {
         mantissaDecimal += d;
       }
     }
-    printf("\n-1^%ld * 2^(%ld - 1023) * %g\n", sign, exponent, mantissaDecimal);
+    printf("\n-1^%ld * 2^(%ld - 1023) * %.17g\n", sign, exponent, mantissaDecimal);
     // TODO check for special exponents:
     // - 0x000 means signed zero and subnormal numbers
     // - 0x7FF means infinite if F = 0 else NaN
     double a = pow(-1.0, (double)sign);
     double b = (double)pow(2.0, ((double)exponent - 1023.0));
     double product = a * b * mantissaDecimal;
-    uint64_t *productView = (uint64_t *)&product;
     if (product != v.f) {
       double error = fabs(product - v.f);
-      constexpr double tolerance = 1.0 / 1'000'000'000;
+      constexpr double tolerance = 1.0 / 1000000000;
+
       if (error > tolerance) {
         fprintf(stderr, "Significant rounding error\n");
         abort();
@@ -98,10 +99,7 @@ void print(Value v) {
         fprintf(stderr, "Insignificant rounding error\n");
       }
     }
-    printf("%g * %g * %g = %.17g (0x%lX)\n", a, b, mantissaDecimal, product,
-           *productView);
-
-    printf("%.17g\t0x%lX\n", v.f, v.i);
+    printf("%g * %g * %g = %.17g (0x%lX)\n", a, b, mantissaDecimal, v.f, view);
   }
   }
 }
