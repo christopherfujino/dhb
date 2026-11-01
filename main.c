@@ -28,6 +28,16 @@ void print(Value v) {
     uint64_t exponent = (view >> 52) & elevenLsbs;
     constexpr uint64_t mantissaMask = 0x000FFFFFFFFFFFFFUL;
     uint64_t mantissa = view & mantissaMask;
+    double mantissaDecimal = 1.0;
+    // TODO: calculate this with ints, iterating over bits (and shifts?)
+    {
+      for (int i = 0; i < 52; i++) {
+        int bit = ((mantissa >> (51 - i)) & 0x1);
+        double denominator = (pow(2.0, (i + 1)));
+        double d = ((double)bit) / denominator;
+        mantissaDecimal += d;
+      }
+    }
 
     printf("%.1lb %.11lb %.52lb\n", sign, exponent, mantissa);
 
@@ -47,7 +57,7 @@ void print(Value v) {
     for (unsigned int i = 0; i < 11; i++) {
       fputc(' ', stdout);
     }
-    printf("\u2514\tMantissa = %ld\n", mantissa);
+    printf("\u2514\tMantissa = %ld (%g)\n", mantissa, mantissaDecimal);
 
     printf("\u2502 \u2514");
     for (unsigned int i = 0; i < 12; i++) {
@@ -71,17 +81,8 @@ void print(Value v) {
       printf(" Sign     = 0\n");
     }
 
-    double mantissaDecimal = 1.0;
-    // TODO: calculate this with ints, iterating over bits (and shifts?)
-    {
-      for (int i = 0; i < 52; i++) {
-        int bit = ((mantissa >> (51 - i)) & 0x1);
-        double denominator = (pow(2.0, (i + 1)));
-        double d = ((double)bit) / denominator;
-        mantissaDecimal += d;
-      }
-    }
-    printf("\n-1^%ld * 2^(%ld - 1023) * %.17g\n", sign, exponent, mantissaDecimal);
+    printf("\n-1^%ld * 2^(%ld - 1023) * %.17g\n", sign, exponent,
+           mantissaDecimal);
     // TODO check for special exponents:
     // - 0x000 means signed zero and subnormal numbers
     // - 0x7FF means infinite if F = 0 else NaN
